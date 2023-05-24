@@ -1,0 +1,135 @@
+<!-- v12, list updated, buttons removed, description added at top 
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Barcode Generator</title>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.3/dist/JsBarcode.all.min.js"></script>
+  <style>
+    #barcode {
+      margin-left: 200px; 
+    }
+    #results div {
+     font-size: 65px !important;
+    }
+    #search {font-size: 24px;}
+  </style>
+</head>
+<body>
+ <h1>Type any part of the product name, then tap the name in the list to change the barcode</h1>
+  <div>
+    <canvas id="barcode"></canvas>
+  </div>
+  <div>
+    <input type="text" id="search" placeholder="Enter Product Name">
+  </div>
+  <div id="results"></div>
+  <script>
+    var items = [
+      {name: "Funko POP! Vinyl Pokemon", code: "18434"},
+      {name: "Funko POP! Vinyl Care Bears Wish Bear", code: "19612"},
+      {name: "Funko POP! Vinyl Care Bears True Heart Bear", code: "19613"},
+      {name: "Funko POP! Vinyl Demon Slayer", code: "19424"},
+      {name: "Funko POP! Vinyl My Hero Academia Female", code: "19610"},
+      {name: "Funko POP! Vinyl My Hero Academia Deku", code: "19625"},
+      {name: "Mini Sports Ball 🏀⚾🏈⚽", code: "15136"},
+      {name: "D&B Pen", code: "16434"},
+      {name: "16 inch Rainbow Ball", code: "17528"},
+      {name: "Karaoke Mic", code: "17619"},
+      {name: "Squishy Pen", code: "17855"},
+      {name: "LOL Surprise Egg", code: "18221"},
+      {name: "Gaming Headset", code: "18241"},
+      {name: "Power Pocket", code: "18399"},
+      {name: "D&B Screaming Chicken", code: "18701"},
+      {name: "Natural Extract Facial Mask", code: "18724"},
+      {name: "Sonic Boom Hanger Blind Bag", code: "18748"},
+      {name: "Minecraft Build Blind Box", code: "18750"},
+      {name: "D&B 6oz Stainless Steel Flask", code: "18828"},
+      {name: "16 inch Squishmallow Plush", code: "18843"},
+      {name: "24 inch Squishmallow Plush", code: "18844"},
+      {name: "Assorted Kids Card Games", code: "18875"},
+      {name: "LED Ring Light Studio", code: "18937"},
+      {name: "RGB 6.5ft Neon LED Strip", code: "18946"},
+      {name: "Sonic All-Stars Pullback Racer", code: "19618"},
+      {name: "Pokemon Construx Figure", code: "19622"},
+      {name: "15 inch Care Bears Plush", code: "19683"},
+      {name: "D&B 60 inch Fleece Blanket", code: "16310"},
+      {name: "Mario Kart Hot Wheels", code: "19620"},
+      {name: "D&B Basketball Set", code: "3050"},
+      {name: "D&B Crazy Straw Cup", code: "12632"},
+      {name: "Spiked Flashing Ball", code: "12920"},
+      {name: "2 inch Eye Popper", code: "15195"},
+      {name: "Two-toned 38mm Bouncy Ball", code: "16281"},
+      {name: "Magic Mini Rainbow Slinky Spring", code: "16284"},
+      {name: "Glitter Tube Bracelet", code: "16517"},
+      {name: "Unicorn Hand Puppet", code: "17187"},
+      {name: "Shark Hand Puppet", code: "17188"},
+      {name: "Small Slow Foam Asst.", code: "17190"},
+      {name: "Dinosaur Hand Puppet", code: "17851"},
+      {name: "Cutetitos", code: "18198"},
+      {name: "NFL Blind Bag", code: "18206"},
+      {name: "NBA Blind Bag", code: "18207"},
+      {name: "1.75 inch Popper", code: "18290"},
+      {name: "4 Wheel Drive Car", code: "18340"},
+      {name: "Costume Critter", code: "18614"},
+      {name: "Gamer Controller Stress Toy", code: "18615"},
+      {name: "1.5 inch Small Flashing Spiked Ball", code: "18617"},
+      {name: "4 inch Cats Vs. Pickles Plush", code: "18633"},
+      {name: "Roblox Blind Box", code: "18634"},
+      {name: "Dairyaire Men's Trunks", code: "18658"},
+      {name: "3.7oz Serum", code: "18722"},
+      {name: "7 inch - 13 inch Minecraft Plush", code: "18775"},
+      {name: "Dirty Minds Game", code: "18788"},
+      {name: "Among Us Crewmates Blind Box", code: "19098"},
+      {name: "Super Mario Hanger Blind Bag", code: "19621"},
+      {name: "Taste for Tickets Appetizer", code: "1002001719"},
+      {name: "Taste for Tickets Entree", code: "1002001720"},
+      {name: "Taste for Tickets Dessert", code: "1002001718"},
+      {name: "Mini Portable Fridge", code: "19685"},
+      {name: "D&B Wristband", code: "16317"},
+      {name: "Bath & Body Mesh Bag", code: "18719"},
+      {name: "UV-C Sanitizer Phone Cleaner", code: "18699"},
+      {name: "ZURU X-Shot Micro", code: "19431"},
+      {name: "ZURU X-Shot Kickback", code: "19432"},
+      {name: "ZURU X-Shot Fury 4 2pk", code: "19433"},
+      {name: "8 inch Shifty Eyes Plush", code: "19813"}
+    ];
+    var barcode = document.getElementById("barcode");
+    var currentBarcode = "17190";
+    JsBarcode("#barcode", currentBarcode, {
+      format: "code128",
+      displayValue: true,
+      fontSize: 20,
+	     width: 6,
+      height: 200
+    });
+
+    var searchInput = document.getElementById("search");
+    var resultsDiv = document.getElementById("results");
+    searchInput.addEventListener("input", function() {
+      var query = searchInput.value.toLowerCase();
+      var results = items.filter(function(item) {
+        return item.name.toLowerCase().indexOf(query) !== -1;
+      });
+      resultsDiv.innerHTML = "";
+      results.forEach(function(result) {
+        var div = document.createElement("div");
+        div.textContent = result.name;
+        div.style.cursor = "pointer";
+        div.addEventListener("click", function() {
+          currentBarcode = result.code;
+          JsBarcode("#barcode", currentBarcode, {
+            format: "code128",
+            displayValue: true,
+            fontSize: 20,
+	           	width: 6,
+            height: 200
+          });
+        });
+        resultsDiv.appendChild(div);
+      });
+    });
+  </script>
+</body>
+</html>
